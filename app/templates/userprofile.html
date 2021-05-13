@@ -1,0 +1,48 @@
+{% extends 'findjobs.html' %}
+
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="userprofile">
+<h1 class="name">{{user.name}}</h1>
+    <br>
+<center>
+    {% if current_user.id == user.id %}
+
+    <a  class="clickme" href="{{url_for('profile.edit_account') }}">Edit Account</a>
+
+
+      <a class="clickme" href="{{url_for('profile.delete_account') }}">Delete Account</a>
+
+    {% endif %}
+</center>
+<br><br>
+<div class="myposts container-fluid-sm">
+<h2 class="paddo">MY POSTS</h2>
+
+<div class="container-fluid-sm">
+<div class="row">
+{% for post in user.posts %}
+    <div class="finally card ml-5 mt-5 shadow" style="width: 18rem;">
+    <h6 class="card-header"><a href="{{url_for('profile.profile_view',author=post.author.id)}}" style="color: white;">{{post.author.name.capitalize()}}</a></h6>
+     <a href="{{url_for('postextends', id=post.id)}}"><img class ="card-img-top" src="{{ json.loads(post.pic)['url'] }}">
+        <div class="card-body">
+         <center><h5 class="card-text" style="font-family: 'Sans-serif';color: rgb(255, 85, 11); ">Hi! I am {{post.name.capitalize()}}</h5></center></a>
+        <a href="{{url_for('display.likes',postid=post.id)}}" style="text-decoration: none; color: white;display: block; margin-top: 20px;"><i class="{{'text-blue-600' if current_user in post.liked_by else 'text-gray-400'}} fa fa-thumbs-o-up fa-2x"></i>{{post.likes}}</a>
+         </div>
+      <div class="card-footer">
+    {% if current_user.id == post.author.id %}
+
+        <a class="btnedit" href="{{url_for('upload.edit_post',id=post.id)}}"><i class="fa fa-pencil-square-o fa-2x" ></i></a>
+        <a class="btndel" href="{{url_for('upload.delete_post',id=post.id)}}" style="position: absolute; right: 20px;"><i class="fa fa-trash fa-2x"></i></a>
+
+    {% endif %}
+
+     </div>
+     </div>
+
+{% endfor %}
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

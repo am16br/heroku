@@ -1,35 +1,51 @@
-from flask import Flask, session
+from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
-from flask_bcrypt import Bcrypt
-from dotenv import load_dotenv
-import os, logging
+from flask_migrate import Migrate,MigrateCommand
+import os
 
-db = SQLAlchemy()
-ma = Marshmallow()
-bcrypt = Bcrypt()
+app = Flask(__name__)
+log_in = LoginManager(app)
+log_in.login_view = 'login'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
-def create_app():
-    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-    load_dotenv(dotenv_path)
-    app = Flask(__name__)
+uri = os.environ.get('DATABASE_URL')
+if uri.startswith("postgres://") if uri else False:
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL'
-    )
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
-    ma.init_app(app)
-    bcrypt.init_app(app)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAX_CONTENT_LENGTH'] = 20*1024*1024
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg','.png','.jpeg']
 
-    # enable logging via gunicorn
-    gunicorn_error_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers.extend(gunicorn_error_logger.handlers)
-    app.logger.setLevel(logging.DEBUG)
+#folder = str(os.path.abspath('app'))
+#if folder.startswith('/app/app') if folder else False:
+#    folder = folder.replace('/app/app','/app')
+app.config['UPLOAD_FOLDER'] = os.path.abspath('app') +'/static/images'
 
-    from .api_v1 import api as api_v1_blueprint
-    # all the routes of this api will be prefixed with "/api/v1"
-    # ie. POST /api/v1/users/signup
-    app.register_blueprint(api_v1_blueprint, url_prefix='/api/v1')
 
-    return app
+db = SQLAlchemy(app)
+migrate = Migrate(app,db)
+from app.models import User,Upload
+
+#import blueprints
+from app.oauth.views import login_oauth
+from app.login_check import login
+from app.upload import upload
+from app.display import display
+from app.comments import comments
+from app.profile import profile
+#blueprints
+app.register_blueprint(login_oauth,url_prefix='/oauth_login')
+app.register_blueprint(login,url_prefix='/loginsimple')
+app.register_blueprint(upload,url_prefix='/upload')
+app.register_blueprint(display)
+app.register_blueprint(comments,url_prefix='/comments')
+app.register_blueprint(profile,url_prefix='/profile')
+
+from app import views,models
+
+
+
+
+

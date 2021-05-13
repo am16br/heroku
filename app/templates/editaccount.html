@@ -1,0 +1,25 @@
+{% extends 'findjobs.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+{% block content %}
+<div class="upload p-3 shadow">
+<form action="{{ url_for('profile.edit_account_process') }}" method="post">
+         {{ form.hidden_tag() }}
+          <p class="brrr">
+                Name<br><input type="text" value="{{current_user.name}}" required name="name"><br>
+
+
+        </p>
+        <p class="brrr">
+                Email<br><input type="text" value="{{current_user.email}}" required name="email">
+
+
+        </p>
+        <p class="brrr">
+                <input type="submit" value="UPDATE ACCOUNT"><br>
+
+        </p>
+</form>
+
+</div>
+{% endblock %}

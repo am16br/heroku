@@ -1,0 +1,35 @@
+{% extends 'findjobs.html' %}
+
+{% block title %}Upload file{% endblock %}
+
+{% block content %}
+<div class="upload p-3 shadow">
+<form method="post" action="{{ url_for('upload.edit_process')}}">
+
+    <input type="hidden" name="id" value="{{post.id}}">
+    <p>
+    Pets name<br>
+        <input type="text" name="name" value="{{post.name}}" required><br>
+    </p>
+
+    <p>
+    Pet's pic<br>
+    <img src="{{json.loads(post.pic)['url']}}" width="150px" height="150px"><br>
+    </p>
+
+    <p>
+    Tell us something about your pet<br>
+    <textarea name="about" required>{{post.about}}</textarea><br>
+
+    </p>
+
+    <p>
+     <input type="submit" value="UPDATE">
+    </p>
+
+
+
+</form>
+</div>
+
+{% endblock %}

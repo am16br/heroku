@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+     <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">
+
+</head>
+<body style="background-color: rgb(22, 21, 31);">
+<div class="container-fluid">
+<nav class="navbar navbar-expand-sm navbar-dark fixed-top shadow-sm p-3" style="background-color: rgb(38, 38, 38); " >
+    <a class="navbar-brand" href="#">PETBOOK</a>
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+  <ul class="navbar-nav ml-auto">
+    <li class=" nav-item active">
+        <a class="nav-link" href="{{ url_for('display.show_post') }}">Gallery</a>
+    </li>
+{% if current_user.is_authenticated %}
+    <li class="nav-item">
+        <a class="nav-link"  href="{{ url_for('upload') }}">Upload</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('profile.display_profile') }}">Profile</a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login.logout') }}">Logout</a>
+    </li>
+{% else %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('login') }}">SignIn</a>
+    </li>
+{% endif %}
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('aboutme') }}">About Me</a>
+    </li>
+  </ul>
+    </div>
+</nav>
+</div>
+<br><br>
+<div class="forfoot" style="min-height: calc(100vh - 40px);">
+{% block content %}
+
+<div class="container-fluid-sm">
+<div class="row">
+{% for post in posts %}
+    <div class="card ml-5 mt-5 shadow finally" style="width: 18rem;">
+    <h6 class="card-header"><a href="{{url_for('profile.profile_view',author=post.author.id)}}" style="color: white;">{{post.author.name.capitalize()}}</a></h6>
+    <a href="{{url_for('postextends', id=post.id)}}"><img class ="card-img-top" src="{{ json.loads(post.pic)['url'] }}">
+        <div class="card-body">
+         <center><h5 class="card-text" style="font-family: 'Sans-serif'; color: rgb(255, 85, 11); ">Hi! I am {{post.name.capitalize()}}</h5></center></a>
+         <a href="{{url_for('display.likes',postid=post.id)}}" style="text-decoration: none; color: white;display: block; margin-top: 20px;"><i class="{{'text-blue-600' if current_user in post.liked_by else 'text-gray-400'}} fa fa-thumbs-o-up fa-2x"></i>{{post.likes}}</a>
+         </div>
+      <div class="card-footer">
+    {% if current_user.id == post.author.id %}
+
+        <a class="btnedit" href="{{url_for('upload.edit_post',id=post.id)}}"><i class="fa fa-pencil-square-o fa-2x" ></i></a>
+        <a class="btndel" href="{{url_for('upload.delete_post',id=post.id)}}" style="position: absolute; right: 20px;"><i class="fa fa-trash  fa-2x" ></i></a>
+
+    {% endif %}
+
+     </div>
+     </div>
+
+{% endfor %}
+</div>
+</div>
+    {% endblock %}
+</div>
+<footer class="page-footer">
+
+    <div>
+        <a href="https://www.linkedin.com/in/rajesh-singh-94aa76207/" > <i style="color: rgb(33, 37, 41) !important;" class="fa fa-linkedin-square fa-2x" aria-hidden="true"></i></a>
+        <a href="https://github.com/Rajeshsingh127"><i class="fa fa-github-square fa-2x" style="color: rgb(33, 37, 41) !important;" aria-hidden="true"></i></a>
+
+
+    </div>
+
+    <div class="copyfoot">2021 © Rajesh Singh. All Right Reserved.</div>
+
+</footer>
+</body>
+</html>

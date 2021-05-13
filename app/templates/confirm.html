@@ -1,0 +1,16 @@
+{% extends 'findjobs.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+{% block content %}
+<div class=" upload p-3 shadow">
+<form method="post" action="{{url_for('profile.delete')}}">
+    <p class="brrr">Confirm your password</p><br>
+    <input type="password", required, name="password_confirm">
+    <br>
+    <input type="submit" value="submit">
+
+
+</form>
+</div>
+<br><br><br><br><br>
+{% endblock %}

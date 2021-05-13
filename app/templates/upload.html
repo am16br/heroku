@@ -1,0 +1,52 @@
+{% extends 'findjobs.html' %}
+
+{% block title %}Upload file{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<div class="upload p-3 shadow">
+<form method="post" action="{{ url_for('upload.upload_process') }}", enctype="multipart/form-data">
+<h1 class="title">SHOW US YOUR PET</h1><br>
+    {{ form.hidden_tag() }}
+    <p>
+    {{ form.name.label }}<br>
+    {{ form.name }}<br>
+        {% for error in form.name.errors %}
+                <span style="color: red;">{{error}}</span>
+        {% endfor %}
+    </p>
+
+    <p >
+    <label class="custom-file-upload">
+    Upload your pets pic
+    {{ form.pic }}<br>
+    </label>
+        {% for error in form.name.errors %}
+                <span style="color: red;">{{error}}</span>
+        {% endfor %}
+
+    </p>
+
+    <p >
+    {{ form.about.label }}<br>
+    {{ form.about }}<br>
+        {% for error in form.name.errors %}
+                <span style="color: red;">{{error}}</span>
+        {% endfor %}
+
+    </p>
+
+    <p class="submit">
+    {{ form.submit }}<br>
+        {% for error in form.name.errors %}
+                <span style="color: red;">{{error}}</span>
+        {% endfor %}
+
+    </p>
+
+
+
+</form>
+</div>
+{% endblock %}
